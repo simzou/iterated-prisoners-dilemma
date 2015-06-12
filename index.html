@@ -156,10 +156,10 @@
       <p>Each bot plays the other bot, including a clone of itself for 200 rounds. Thus the maximum score a bot can achieve is 1000 and the lowest score is 0. If two bots cooperate every round, their scores will be 600. </p>
       <h3 id="results"><a name="user-content-results" href="#results" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Results</h3>
       <p>The results of a simple tournament with just the Defector, Cooperator, and TitForTat is shown below.</p>
-      <p><img alt="Chart 2" src="/Users/simon/Dropbox/education/game_theory/iterated-prisoners-dilemma/chart2.png" /></p>
+      <p><img alt="Chart 2" src="chart2.png" /></p>
       <p>We see that these initial results diverge from Axelrod&rsquo;s findings that &ldquo;nice&rdquo; strategies (ones that are never the first to defect) are better strategies as the Defector has the highest mean score of the tournament.</p>
       <p>The following chart shows the results of the listed 8 strategies pitted against each other in the tournament.</p>
-      <p><img alt="Chart 1" src="/Users/simon/Dropbox/education/game_theory/iterated-prisoners-dilemma/chart1.png" /></p>
+      <p><img alt="Chart 1" src="chart1.png" /></p>
       <p>We have that the Vindictive and Defector bots are the high scorers, helped by the fact that they exploit the Cooperator and Friendly bots, which do poorly. We do see evidence of &ldquo;nice&rdquo; strategies doing well overall. Vindictive, TitForTat, and Pavlov are &ldquo;nice&rdquo; strategies here (strategies that will never defect first) and they make up 3 of the top 4 scoring strategies. </p>
       <p>However, Tit For Tat does not fare as well as it did in Axelrod&rsquo;s original experiment and strategies that are the opposite of &ldquo;nice&rdquo; and &ldquo;forgiving&rdquo; are the high scorers. </p>
       <h3 id="analysis"><a name="user-content-analysis" href="#analysis" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Analysis</h3>
@@ -176,7 +176,7 @@
       <p>While the &ldquo;environment&rdquo; of our simulation does satisfy conditions 2-4 (interactions are repeated, strategies can survive, and there is variation of strategies) we see that the environment of our simulation did not satisfy the first condition, which explains why cooperation did not evolve to be the optimal strategy. Greedy, Friendly, Cooperator, Defector, and Random all had no ability to recognize and respond to what the opponent was doing and ignored previous history. This both prevents those individuals from recognizing others that are more likely to cooperate or those that are more likely to defect and playing accordingly.</p>
       <p>Axelrod&rsquo;s original and followup tournament consisted largely of strategies, including Tit-For-Tat that in some way took into account what the opponent was doing. Absent the ability to recognize others and remember history, and cooperation does not evolve. </p>
       <p>To test this explanation, we can run a simulation consisting mostly of strategies that do have memory, such as Tit-For-Tat and Pavlov. Here, we have a simulation of a tournament with 2 Tit-For-Tats, 4 Pavlov&rsquo;s, and a Defector:</p>
-      <p><img alt="Chart 3" src="/Users/simon/Dropbox/education/game_theory/iterated-prisoners-dilemma/chart3.png" /></p>
+      <p><img alt="Chart 3" src="chart3.png" /></p>
       <p>Here we see the bots without memory, Defector and Random, do poorly compared to the the rest and Tit-For-Tat now does come out on top when the environment has more individuals capable of cooperation. Even upon adding more defectors, Tit-For-Tat is able to find enough other individuals (the clusters as needed by condition 4) to cooperate with to win the tournament.</p>
       <p>You can run your own tournaments at <a href="http://simzou.github.io/iterated-prisoners-dilemma"><a href="http://simzou.github.io/iterated-prisoners-dilemma/simulation.html"><a href="http://simzou.github.io/iterated-prisoners-dilemma/simulation.html">http://simzou.github.io/iterated-prisoners-dilemma/simulation.html</a></a></a>.</p>
       <h3 id="conclusion"><a name="user-content-conclusion" href="#conclusion" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Conclusion</h3>
