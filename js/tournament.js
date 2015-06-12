@@ -11,6 +11,7 @@ var static_bots = {
 
 function create_bots(players) {
 	var bots = []
+	id = 0;
 	for (var i = 0; i < players.length; i++) {
 		console.log(players[i]);
 		if (players[i] in static_bots)
