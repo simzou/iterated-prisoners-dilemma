@@ -1,30 +1,41 @@
+function display_players(players) {
+	$("#players").html(players.join(', '));
+}
 $(document).ready(function () {
-	// var data = {
- //    labels: ["January", "February", "March", "April", "May", "June", "July"],
- //    datasets: [
- //        {
- //            label: "My First dataset",
- //            fillColor: "rgba(220,220,220,0.2)",
- //            strokeColor: "rgba(220,220,220,1)",
- //            pointColor: "rgba(220,220,220,1)",
- //            pointStrokeColor: "#fff",
- //            pointHighlightFill: "#fff",
- //            pointHighlightStroke: "rgba(220,220,220,1)",
- //            data: [65, 59, 80, 81, 56, 55, 40]
- //        },
- //        {
- //            label: "My Second dataset",
- //            fillColor: "rgba(151,187,205,0.2)",
- //            strokeColor: "rgba(151,187,205,1)",
- //            pointColor: "rgba(151,187,205,1)",
- //            pointStrokeColor: "#fff",
- //            pointHighlightFill: "#fff",
- //            pointHighlightStroke: "rgba(151,187,205,1)",
- //            data: [28, 48, 40, 19, 86, 27, 90]
- //        }
- //    ]
-	// };
+	var players_names = [];
+	$(".success").click(function(){
+		players_names.push(this.id);
+		display_players(players_names);
+	})
+	$("#remove-button").click(function(){
+		players_names.pop();
+		display_players(players_names);
+	})
+	$("#run-button").click(function() {
+		clear_divs();
+		$("#chart-div").append('<h3 id="chart-title">Average Scores per Bot</h3>');
+		$("#chart-div").append('<canvas id="barchart"></canvas>');
+		players = create_bots(players_names);
+		opponents = create_bots(players_names);
+		var records = run_tourney(players, opponents, 200);
+		draw_chart(records);
 
-	// var ctx = document.getElementById("myChart").getContext("2d");
-	// var myNewChart = new Chart(ctx).Line(data);
+	})
+	$("#battle-log-button").click(function() {
+		$("#battle-log").toggle();
+	});
+	$("#clear-button").click(function(){
+		players_names = [];
+		display_players(players_names);
+		id = 0;
+		clear_divs();
+	});
+
 });
+
+function clear_divs() {
+	$("#battle-log").empty();
+	$("#scores-list").empty();
+	$("#chart-div").empty();
+
+}

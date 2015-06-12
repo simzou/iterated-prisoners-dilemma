@@ -8,14 +8,16 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <script src="js/Chart.min.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/bot.js"></script>
-    <script src="js/tournament.js"></script>
-    <script src="js/main.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
     <script>
       MathJax.Hub.Config({
         config: ["MMLorHTML.js"],
@@ -59,16 +61,17 @@
     <section class="main-content">
       <h3 id="table-of-contents"><a name="user-content-table-of-contents" href="#table-of-contents" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Table of Contents</h3>
       <ol>
-        <li>Introduction </li>
-        <li>Background</li>
-        <li>Setup</li>
-        <li>Results</li>
-        <li>Conclusion</li>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#background">Background</a></li>
+        <li><a href="#setup">Setup</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#analysis">Analysis</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
       </ol>
       <h3 id="introduction"><a name="user-content-introduction" href="#introduction" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Introduction</h3>
-      <p>In the 1980s, University of Michigan professor of political scientist Robert Axelrod conducted one of the first experiments that combined computation modeling and evolutionary game theory. </p>
-      <p>He solicited strategies (written as FORTRAN programs) from colleagues around the world for the iterated prisoner&rsquo;s dilemma and ran a round robin tournament, pitting the strategies against each other and determining a winner. His results that showed &ldquo;nicer&rdquo; and &ldquo;forgiving&rdquo; strategies had greater success along with his collaboration with biologist W.D. Hamilton illustrated how cooperation could have evolved biologically. </p>
-      <p>For this project, we attempted to recreate Axelrod&rsquo;s tournament in JavaScript with various strategies. However, while the tournament ran successfully, the resulting winners did not align with Axelrod&rsquo;s original results. </p>
+      <p>In the 1980s, University of Michigan professor of political science Robert Axelrod conducted one of the first experiments that combined computational modeling and evolutionary game theory. </p>
+      <p>He solicited strategies (written as FORTRAN programs) from colleagues around the world for the iterated prisoner&rsquo;s dilemma and ran a round robin tournament, pitting the strategies against each other and determining a winner. His results that showed &ldquo;nice&rdquo; and &ldquo;forgiving&rdquo; strategies had greater success in the tournament. His experiments and collaboration with biologist W.D. Hamilton illustrated how cooperation could have evolved biologically. </p>
+      <p>For this project, we attempted to recreate Axelrod&rsquo;s tournament in JavaScript with different sets of strategies. However, we find that if the set of all strategies do not meet certain constraints, cooperation will not evolve as it did in Axelrod&rsquo;s tournament.</p>
       <h3 id="background"><a name="user-content-background" href="#background" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Background</h3>
       <p>The <strong>Prisoner&rsquo;s Dilemma</strong> is a classic example in game theory that illustrates how individual self-interest can lead to a poor outcome for a group. </p>
       <p>The prisoner&rsquo;s dilemma has 2 players (the &ldquo;prisoners&rdquo;) who each have two options: cooperate or defect. These choices result in 4 possible outcomes with associated payoffs for each player. </p>
@@ -80,7 +83,7 @@
         <li>$P$: punishment for mutual defection (1 point)</li>
       </ul>
       <p>If both players cooperate, they both receive $R$ points. If one player cooperates and the other defects, the cooperator gets $S$ while the defector gets $T$ points. If both defect, they both get $P$ points. </p>
-      <p>These values are otherwise arbitrary values selected to follow this constraint: $T &gt; R &gt; P &gt; S$. Thus the temptation to defect is the highest score possible, the lowest score is the sucker&rsquo;s payoff, and the reward for mutual cooperation is higher than the punishment for mutual defection. The &ldquo;dilemma&rdquo; comes from the fact that mutual cooperation is preferable to mutual defection, but defection is the optimal strategy (i.e. mutual defection is a <strong>Nash equilibrium</strong>, a situation in which neither player can do better by changing his or her strategy). <a name="footnote1"></a><a href="#footnotes"><sup>1</sup></a></p>
+      <p>These values are otherwise arbitrary values selected to follow this constraint: $T &gt; R &gt; P &gt; S$. Thus the temptation to defect is the highest score possible, the lowest score is the sucker&rsquo;s payoff, and the reward for mutual cooperation is higher than the punishment for mutual defection. The &ldquo;dilemma&rdquo; comes from the fact that mutual cooperation is preferable to mutual defection, but defection is the optimal strategy (i.e. mutual defection is a <strong>Nash equilibrium</strong>, a situation in which neither player can do better by changing his or her strategy). <a name="footnote1"></a><a href="#footnotes"><sup>1</sup></a>. The following table of payoffs are the values used in Axelrod&rsquo;s experiments and will be the same that are used for our simulations.</p>
       <table>
         <tr>
           <th></th>
@@ -109,21 +112,22 @@
       <p><strong>Iterated Prisoner&rsquo;s Dilemma</strong> is then the same game played repeatedly by the same players. This allows for players to modify their behavior based on the other player&rsquo;s moves. </p>
       <p>In Axelrod&rsquo;s original tournament (14 strategies), the winning strategy was a simple strategy called Tit-for-Tat. It would cooperate initially and then mimic its opponent&rsquo;s last move. Axelrod then published the results and repeated the experiment, and received 64 submissions, with Tit-for-Tat winning again. Axelrod identified 4 features of the strategy that made it successful: </p>
       <ol>
-        <li>Niceness - never being the first to defect</li>
-        <li>Provocable - retaliates quickly when opponent defects</li>
-        <li>Forgiving - cooperate again after retaliating</li>
-        <li>Clear - strategy is clear for other players to understand (and recognize as not exploitable) </li>
+        <li><em>Niceness</em> - never being the first to defect</li>
+        <li><em>Provocable</em> - retaliates quickly when opponent defects</li>
+        <li><em>Forgiving</em> - cooperates again after retaliating</li>
+        <li><em>Clear</em> - strategy is clear for other players to understand (and recognize as not exploitable) </li>
       </ol>
+      <p>Other strategies submitted included variants on Tit-For-Tat that would retaliate more often or check to see if the opponent was playing randomly. </p>
       <h3 id="setup"><a name="user-content-setup" href="#setup" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Setup</h3>
       <p>Similar iterated prisoner&rsquo;s dilemma simulations have been demonstrated in R <a name="footnote2"></a><a href="#footnotes"><sup>2</sup></a> and Python <a name="footnote3"></a><a href="#footnotes"><sup>3</sup></a>. Here, we attempt to use JavaScript to program the strategies so that the simulations can run in any web browser. </p>
       <p>Using object oriented programming, a Bot class is defined from which other bots with different strategies will be derived. Each bot keeps track of the history of its own moves, as well as a the score for each round that it plays against a single opponent. Each bot also has access to its opponent&rsquo;s history of moves. Moves are represented by the characters &ldquo;C&rdquo; for cooperate and &ldquo;D&rdquo; for defect. </p>
-      <p>Here the basic prototype for a generic Bot:</p>
+      <p>Here is the basic prototype for a generic Bot:</p>
       <pre><code>var Bot = function () {
           this.scores = [];
           this.history = [];
       };
       </code></pre>
-      <p>And here is the Tit-for-Tat bot (using the winning strategy described previously) derived from that Bot:</p>
+      <p>And here is an example of a derived bot which uses the Tit-for-Tat bot (the winning strategy described previously):</p>
       <pre><code>function TitForTatBot() {
           Bot.call(this);
           this.strategy = function(opponent) { 
@@ -137,25 +141,52 @@
           }
       };
       </code></pre>
-      <p>For the tournament, the following strategies were implement:</p>
+      <h4 id="strategies"><a name="user-content-strategies" href="#strategies" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Strategies</h4>
+      <p>For the initial tournament, we implemented the following strategies:</p>
       <ul>
-        <li>Defector: Always defects</li>
-        <li>Cooperator: Always cooperates</li>
-        <li>TitForTat: Cooperates initially, and then mimic&rsquo;s opponent&rsquo;s last move</li>
-        <li>
-          Variable($p$): Cooperates a percentage of the time based on parameter $p$. If $p = 1$, it is the same as Cooperator and if $p = 0$, it is the same as Defector. For cosmetic purposes, VariableBots gets different names based on the parameter.
-          <ul>
-            <li>If $0 &lt; p &lt; 0.5$, the bot is called &ldquo;Greedy&rdquo;</li>
-            <li>If $0.5 &lt; p &lt; 1$, the bot is called &ldquo;Friendly&rdquo;</li>
-            <li>If $p = 0.5$, the bot is called &ldquo;Random&rdquo;</li>
-          </ul>
-        </li>
+        <li><strong>Defector</strong>: Always defects</li>
+        <li><strong>Cooperator</strong>: Always cooperates</li>
+        <li><strong>TitForTat</strong>: Cooperates initially, and then mimic&rsquo;s opponent&rsquo;s last move</li>
+        <li><strong>Random</strong>: Cooperates (and defects) 50% of the time</li>
+        <li><strong>Greedy</strong>: Cooperates 25% of the time (independent of opponent)</li>
+        <li><strong>Friendly</strong>: Cooperates 75% of the time (independent of opponent)</li>
+        <li><strong>Pavlov</strong>: Cooperates initially, then repeats move if the last round turned out favorably (scored $R$ or $T$)</li>
+        <li><strong>Vindictive</strong>: Cooperates until opponent defects, then defects constantly</li>
       </ul>
+      <p>Each bot plays the other bot, including a clone of itself for 200 rounds. Thus the maximum score a bot can achieve is 1000 and the lowest score is 0. If two bots cooperate every round, their scores will be 600. </p>
+      <h3 id="results"><a name="user-content-results" href="#results" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Results</h3>
+      <p>The results of a simple tournament with just the Defector, Cooperator, and TitForTat is shown below.</p>
+      <p><img alt="Chart 2" src="/Users/simon/Dropbox/education/game_theory/iterated-prisoners-dilemma/chart2.png" /></p>
+      <p>We see that these initial results diverge from Axelrod&rsquo;s findings that &ldquo;nice&rdquo; strategies (ones that are never the first to defect) are better strategies as the Defector has the highest mean score of the tournament.</p>
+      <p>The following chart shows the results of the listed 8 strategies pitted against each other in the tournament.</p>
+      <p><img alt="Chart 1" src="/Users/simon/Dropbox/education/game_theory/iterated-prisoners-dilemma/chart1.png" /></p>
+      <p>We have that the Vindictive and Defector bots are the high scorers, helped by the fact that they exploit the Cooperator and Friendly bots, which do poorly. We do see evidence of &ldquo;nice&rdquo; strategies doing well overall. Vindictive, TitForTat, and Pavlov are &ldquo;nice&rdquo; strategies here (strategies that will never defect first) and they make up 3 of the top 4 scoring strategies. </p>
+      <p>However, Tit For Tat does not fare as well as it did in Axelrod&rsquo;s original experiment and strategies that are the opposite of &ldquo;nice&rdquo; and &ldquo;forgiving&rdquo; are the high scorers. </p>
+      <h3 id="analysis"><a name="user-content-analysis" href="#analysis" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Analysis</h3>
+      <p>In Axelrod&rsquo;s original experiments, strategies that performed better tended to be more cooperative. They rarely defected first and were willing to cooperate even after the opponent had defected. The conclusions of the tournament suggested that cooperation could be evolutionary advantageous.</p>
+      <p>However, in simulations with simplified strategies, we see that cooperation is not necessarily the best strategy and the best strategies may even be to always defect or never forgive. If we consider all the different players and strategies an &ldquo;environment&rdquo;, this suggests that certain environmental conditions need to hold in order for cooperation to evolve and the submissions Axelrod received met those conditions. </p>
+      <p>Axelrod and biological literature <a name="footnote4"></a><a href="#footnotes"><sup>4</sup></a> outline certain conditions that are necessary for cooperation to evolve:</p>
+      <ol>
+        <li>Individuals can recognize others and have the ability to remember prior interactions</li>
+        <li>Individuals must have repeated interactions over a long period of time</li>
+        <li>Successful strategies must be able to thrive and there needs to be variation in the strategies</li>
+        <li>There must be clusters of individuals that will meet and be willing to cooperate</li>
+      </ol>
+      <p>In biology, these conditions turn out to be extremely restrictive, such that humans are among the only species that cooperate with other non-related individuals. Most other species do not have memory and recognition abilities to satisfy condition 1, nor have the lifespan or stable environment to satisfy condition 2. </p>
+      <p>While the &ldquo;environment&rdquo; of our simulation does satisfy conditions 2-4 (interactions are repeated, strategies can survive, and there is variation of strategies) we see that the environment of our simulation did not satisfy the first condition, which explains why cooperation did not evolve to be the optimal strategy. Greedy, Friendly, Cooperator, Defector, and Random all had no ability to recognize and respond to what the opponent was doing and ignored previous history. This both prevents those individuals from recognizing others that are more likely to cooperate or those that are more likely to defect and playing accordingly.</p>
+      <p>Axelrod&rsquo;s original and followup tournament consisted largely of strategies, including Tit-For-Tat that in some way took into account what the opponent was doing. Absent the ability to recognize others and remember history, and cooperation does not evolve. </p>
+      <p>To test this explanation, we can run a simulation consisting mostly of strategies that do have memory, such as Tit-For-Tat and Pavlov. Here, we have a simulation of a tournament with 2 Tit-For-Tats, 4 Pavlov&rsquo;s, and a Defector:</p>
+      <p><img alt="Chart 3" src="/Users/simon/Dropbox/education/game_theory/iterated-prisoners-dilemma/chart3.png" /></p>
+      <p>Here we see the bots without memory, Defector and Random, do poorly compared to the the rest and Tit-For-Tat now does come out on top when the environment has more individuals capable of cooperation. Even upon adding more defectors, Tit-For-Tat is able to find enough other individuals (the clusters as needed by condition 4) to cooperate with to win the tournament.</p>
+      <p>You can run your own tournaments at <a href="http://simzou.github.io/iterated-prisoners-dilemma"><a href="http://simzou.github.io/iterated-prisoners-dilemma/simulation.html"><a href="http://simzou.github.io/iterated-prisoners-dilemma/simulation.html">http://simzou.github.io/iterated-prisoners-dilemma/simulation.html</a></a></a>.</p>
+      <h3 id="conclusion"><a name="user-content-conclusion" href="#conclusion" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Conclusion</h3>
+      <p>Axelrod&rsquo;s original tournaments demonstrated how cooperation could evolve be a successful strategy within a group despite self-interested individuals. However, the environment of strategies has to be such that individual strategies are all capable of utilizing their knowledge of history with each other. When we pit strategies against each other that act independent of memory, the strategies with features Axelrod defined as good (such as being nice and forgiving) no longer perform as well.</p>
       <p><a id="footnotes"></a><br />
         <a href="#footnote1">1</a>: Robert Axelrod and William D. Hamilton, <em>Science</em>. New Series, Vol. 211, No. 4489 (Mar. 27, 1981), pp. 1390-1396<br />
         <a href="#footnote1">2</a>: <a href="http://www.r-bloggers.com/to-cooperate-of-defect-besides-of-coding-prisoners-dilemma-a-game-theory-example-in-r/">http://www.r-bloggers.com/to-cooperate-of-defect-besides-of-coding-prisoners-dilemma-a-game-theory-example-in-r/</a><br />
-        <a href="#footnote1">3</a>: <a href="http://axelrod.readthedocs.org/en/latest/">http://axelrod.readthedocs.org/en/latest/</a>
-      </p>
+        <a href="#footnote1">3</a>: <a href="http://axelrod.readthedocs.org/en/latest/">http://axelrod.readthedocs.org/en/latest/</a><br />
+        <a href="#footnote4">4</a>: Phelan, Jay. <em>What Is Life?: A Guide to Biology.</em> New York, NY: W H Freeman, 2015. Print.
+      </p>      
       <footer class="site-footer">
       </footer>
     </section>

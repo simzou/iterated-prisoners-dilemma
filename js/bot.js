@@ -1,3 +1,37 @@
+var sum = function(arr) {
+	var total = 0;
+	for (var i = 0; i < arr.length; i++) {
+		total += arr[i];
+	}
+	return total;
+};
+
+// functions taken from: http://derickbailey.com/2014/09/21/calculating-standard-deviation-with-array-map-and-array-reduce-in-javascript/
+function standardDeviation(values){
+  var avg = average(values);
+  
+  var squareDiffs = values.map(function(value){
+    var diff = value - avg;
+    var sqrDiff = diff * diff;
+    return sqrDiff;
+  });
+  
+  var avgSquareDiff = average(squareDiffs);
+ 
+  var stdDev = Math.sqrt(avgSquareDiff);
+  return stdDev;
+}
+ 
+function average(data){
+  var sum = data.reduce(function(sum, value){
+    return sum + value;
+  }, 0);
+ 
+  var avg = sum / data.length;
+  return avg;
+}
+
+
 id = 00;
 
 var Bot = function () {
@@ -68,8 +102,8 @@ function TitForTatBot() {
 		else 
 			return opponent.history[moves-1];
 	}
-	this.name = "TitForTatBot" + " (id #" + id + ")";
-	this.nameid = "TitForTatBot";
+	this.nameid = "TitForTatBot" + " (id #" + id + ")";
+	this.name = "TitForTatBot";
 };
 
 TitForTatBot.prototype = Object.create(Bot.prototype);
@@ -87,7 +121,8 @@ function VariableBot(coop_percentage) {
 	};
 	if (coop_percentage < 0.5) {
 		this.nameid = "GreedyBot (" + coop_percentage + ")" + " (id #" + id + ")";
-		this.name = "GreedyBot (" + coop_percentage + ")";
+		//this.name = "GreedyBot (" + coop_percentage + ")";
+		this.name = "GreedyBot";
 	}
 	else if (coop_percentage === 0.5) {
 		this.nameid = "RandomBot" + " (id #" + id + ")";
@@ -95,7 +130,8 @@ function VariableBot(coop_percentage) {
 	}
 	else {
 		this.nameid = "FriendlyBot(" + coop_percentage + ")" + " (id #" + id + ")";
-		this.name = "FriendlyBot(" + coop_percentage + ")";
+		//this.name = "FriendlyBot(" + coop_percentage + ")";
+		this.name = "FriendlyBot";
 	}
 };
 
@@ -153,4 +189,3 @@ function PavlovBot() {
 
 PavlovBot.prototype = Object.create(Bot.prototype);
 PavlovBot.prototype.constructor = PavlovBot;
-

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        
+<!--         <link href="favicon.ico" rel="icon" type="image/x-icon" />
+ -->        <title>Page title</title>
+        <meta name="description" content="Page description, shows up in search results. Should be no longer than 150-160 characters." />
+        
+        <!-- Open Graph -->
+        <meta property="og:title" content="The title of this page, excluding any branding." />
+        <meta property="og:site_name" content="Name of this website." />
+        <meta property="og:url" content="Canonical URL of this page, excluding session and user-identifying variables." />
+        <meta property="og:image" content="URL to an image for this page. Should be at least 1200x630 pixels." />
+        
+        <!-- CSS -->
+<!--         <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css" />
+        <link href="css/app.css" rel="stylesheet" type="text/css" />
+ -->        
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/css/foundation.css" type="text/css" rel="stylesheet"/>
+        <!-- JavaScript -->
+
+        <script src="js/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/js/foundation.min.js"></script>
+
+        <script src="js/underscore-min.js"></script>
+        <script src="js/Chart.min.js"></script>
+        <script src="js/game.js"></script>
+        <script src="js/bot.js"></script>
+        <script src="js/tournament.js"></script>
+        <script src="js/main.js"></script>
+
+        <script id="scores-list-template" type="text/template">
+        <br />
+        <table>
+            <tr>
+                <th>Bot</th>
+                <th>Mean Score</th>
+            </tr>
+
+            <% _.each(entries, function(entry) { %>
+                <tr>
+                <td><%= entry.name %></td>
+                <td><%= entry.avg %></td>
+                </tr>
+            <% }); %>
+        </table>
+        </script>
+
+        <style>
+        #chart-title {
+            text-align: center;
+        }
+        header {
+            margin-bottom: 50px;
+        }
+
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="row">
+                <div class="large-12 columns">
+                    <h1>Iterated Prisoner's Dilemma Simulator</h1>
+                    <p>Click the green buttons to add strategies, then "run" to run the tournament</p>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="container">
+                <div class="row">
+                    <div class="small-8 columns">
+                        <div class="row">
+                            <div class="small-3 columns">
+                                <a class="button success add-button" id="cooperator">Add Cooperator</a>
+                            </div>
+                            <div class="small-3 columns">
+                                <a class="button success add-button" id="defector">Add Defector</a>
+                            </div>
+                            <div class="small-3 columns">
+                                <a class="button success add-button" id="titfortat">Add TitForTat</a>
+                            </div>
+                            <div class="small-3 columns">
+                                <a class="button success add-button" id="pavlov">Add Pavlov</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-3 columns">
+                                <a class="button success add-button" id="vindictive">Add Vindictive</a>
+                            </div>
+                            <div class="small-3 columns">
+                                <a class="button success add-button" id="random">Add Random</a>
+                            </div>
+                            <div class="small-3 columns">
+                                <a class="button success add-button" id="greedy">Add Greedy</a>
+                            </div>
+                            <div class="small-3 columns">
+                                <a class="button success add-button" id="greedy">Add Friendly</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="small-2 columns">
+                        <a class="button failure" id="remove-button">Remove Last Added</a>
+                    </div>   
+                    <div class="small-2 columns">
+                        <div class="row">
+                            <div class="small-12 columns">
+                                <a class="button info" id="run-button">Run</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-12 columns">
+                                <a class="button secondary" id="clear-button">Clear</a>
+                            </div>
+                        </div>
+                    </div>                                 
+
+                <div class="row">
+                    <div class="small-12 columns">
+                        <p id="players"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-10 columns" id="chart-div">
+<!--                         <h3 id="chart-title">Average Scores per Bot</h3>
+ -->                        
+<!--                         <canvas id="barchart"></canvas>
+ -->                    </div>
+                    <div id="scores-list" class="large-2 columns">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <a id="battle-log-button" class="button">Show Full Tournament Log</a>                        
+                        <div id="battle-log"></div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+        <footer></footer>
+        <script>
+            $(document).foundation();
+        </script>
+    </body>
+</html>
