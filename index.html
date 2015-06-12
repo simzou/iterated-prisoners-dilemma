@@ -15,6 +15,32 @@
     <script src="js/bot.js"></script>
     <script src="js/tournament.js"></script>
     <script src="js/main.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script>
+      MathJax.Hub.Config({
+        config: ["MMLorHTML.js"],
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX"],
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: false
+        },
+        TeX: {
+          extensions: ["AMSmath.js", "AMSsymbols.js"],
+          TagSide: "right",
+          TagIndent: ".8em",
+          MultLineWidth: "85%",
+          equationNumbers: {
+            autoNumber: "AMS",
+          },
+          unicode: {
+            fonts: "STIXGeneral,'Arial Unicode MS'"
+          }
+        },
+        showProcessingMessages: false
+      });
+    </script>
     <style>
         #myChart {
             width: 100%;
@@ -31,16 +57,105 @@
       <a href="https://github.com/simzou/iterated-prisoners-dilemma/tarball/master" class="btn">Download .tar.gz</a>
     </section>
     <section class="main-content">
-      <h3>
-        <a class="anchor" id="table-of-contents"></a>
-        Table of Contents
-      </h3>
+      <h3 id="table-of-contents"><a name="user-content-table-of-contents" href="#table-of-contents" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Table of Contents</h3>
       <ol>
-        <li>Introduction / Background</li>
+        <li>Introduction </li>
+        <li>Background</li>
         <li>Setup</li>
         <li>Results</li>
         <li>Conclusion</li>
       </ol>
+      <h3 id="introduction"><a name="user-content-introduction" href="#introduction" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Introduction</h3>
+      <p>In the 1980s, University of Michigan professor of political scientist Robert Axelrod conducted one of the first experiments that combined computation modeling and evolutionary game theory. </p>
+      <p>He solicited strategies (written as FORTRAN programs) from colleagues around the world for the iterated prisoner&rsquo;s dilemma and ran a round robin tournament, pitting the strategies against each other and determining a winner. His results that showed &ldquo;nicer&rdquo; and &ldquo;forgiving&rdquo; strategies had greater success along with his collaboration with biologist W.D. Hamilton illustrated how cooperation could have evolved biologically. </p>
+      <p>For this project, we attempted to recreate Axelrod&rsquo;s tournament in JavaScript with various strategies. However, while the tournament ran successfully, the resulting winners did not align with Axelrod&rsquo;s original results. </p>
+      <h3 id="background"><a name="user-content-background" href="#background" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Background</h3>
+      <p>The <strong>Prisoner&rsquo;s Dilemma</strong> is a classic example in game theory that illustrates how individual self-interest can lead to a poor outcome for a group. </p>
+      <p>The prisoner&rsquo;s dilemma has 2 players (the &ldquo;prisoners&rdquo;) who each have two options: cooperate or defect. These choices result in 4 possible outcomes with associated payoffs for each player. </p>
+      <p>We define the following payoff values:</p>
+      <ul>
+        <li>$R$: reward for mutual cooperation (3 points)</li>
+        <li>$T$: temptation to defect (5 points)</li>
+        <li>$S$: sucker&rsquo;s payoff (0 points)</li>
+        <li>$P$: punishment for mutual defection (1 point)</li>
+      </ul>
+      <p>If both players cooperate, they both receive $R$ points. If one player cooperates and the other defects, the cooperator gets $S$ while the defector gets $T$ points. If both defect, they both get $P$ points. </p>
+      <p>These values are otherwise arbitrary values selected to follow this constraint: $T &gt; R &gt; P &gt; S$. Thus the temptation to defect is the highest score possible, the lowest score is the sucker&rsquo;s payoff, and the reward for mutual cooperation is higher than the punishment for mutual defection. The &ldquo;dilemma&rdquo; comes from the fact that mutual cooperation is preferable to mutual defection, but defection is the optimal strategy (i.e. mutual defection is a <strong>Nash equilibrium</strong>, a situation in which neither player can do better by changing his or her strategy). <a name="footnote1"></a><a href="#footnotes"><sup>1</sup></a></p>
+      <table>
+        <tr>
+          <th></th>
+          <th></th>
+          <th colspan="2">Column Player</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Cooperate</th>
+          <th>Defect</th>
+        </tr>
+        <tr>
+          <th rowspan="2">Row Player</th>
+          <th>Cooperate</th>
+          <td>$(R = 3, R = 3)$</td>
+          <td>$(S = 0, T = 5)$</td>
+        </tr>
+        <tr>
+          <th>Defect</th>
+          <td>$(T = 5, S = 0)$</td>
+          <td>$(P = 1, P = 1)$</td>
+        </tr>
+      </table>
+      <p>In the table above, the first value in each tuple represents the score of the row player and the second represents the score of the column player.</p>
+      <p><strong>Iterated Prisoner&rsquo;s Dilemma</strong> is then the same game played repeatedly by the same players. This allows for players to modify their behavior based on the other player&rsquo;s moves. </p>
+      <p>In Axelrod&rsquo;s original tournament (14 strategies), the winning strategy was a simple strategy called Tit-for-Tat. It would cooperate initially and then mimic its opponent&rsquo;s last move. Axelrod then published the results and repeated the experiment, and received 64 submissions, with Tit-for-Tat winning again. Axelrod identified 4 features of the strategy that made it successful: </p>
+      <ol>
+        <li>Niceness - never being the first to defect</li>
+        <li>Provocable - retaliates quickly when opponent defects</li>
+        <li>Forgiving - cooperate again after retaliating</li>
+        <li>Clear - strategy is clear for other players to understand (and recognize as not exploitable) </li>
+      </ol>
+      <h3 id="setup"><a name="user-content-setup" href="#setup" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Setup</h3>
+      <p>Similar iterated prisoner&rsquo;s dilemma simulations have been demonstrated in R <a name="footnote2"></a><a href="#footnotes"><sup>2</sup></a> and Python <a name="footnote3"></a><a href="#footnotes"><sup>3</sup></a>. Here, we attempt to use JavaScript to program the strategies so that the simulations can run in any web browser. </p>
+      <p>Using object oriented programming, a Bot class is defined from which other bots with different strategies will be derived. Each bot keeps track of the history of its own moves, as well as a the score for each round that it plays against a single opponent. Each bot also has access to its opponent&rsquo;s history of moves. Moves are represented by the characters &ldquo;C&rdquo; for cooperate and &ldquo;D&rdquo; for defect. </p>
+      <p>Here the basic prototype for a generic Bot:</p>
+      <pre><code>var Bot = function () {
+          this.scores = [];
+          this.history = [];
+      };
+      </code></pre>
+      <p>And here is the Tit-for-Tat bot (using the winning strategy described previously) derived from that Bot:</p>
+      <pre><code>function TitForTatBot() {
+          Bot.call(this);
+          this.strategy = function(opponent) { 
+              var moves = opponent.history.length;
+              // if first move, cooperate
+              if (moves === 0)
+                  return 'C'; 
+              else 
+                  // mimic opponent's last move
+                  return opponent.history[moves-1];
+          }
+      };
+      </code></pre>
+      <p>For the tournament, the following strategies were implement:</p>
+      <ul>
+        <li>Defector: Always defects</li>
+        <li>Cooperator: Always cooperates</li>
+        <li>TitForTat: Cooperates initially, and then mimic&rsquo;s opponent&rsquo;s last move</li>
+        <li>
+          Variable($p$): Cooperates a percentage of the time based on parameter $p$. If $p = 1$, it is the same as Cooperator and if $p = 0$, it is the same as Defector. For cosmetic purposes, VariableBots gets different names based on the parameter.
+          <ul>
+            <li>If $0 &lt; p &lt; 0.5$, the bot is called &ldquo;Greedy&rdquo;</li>
+            <li>If $0.5 &lt; p &lt; 1$, the bot is called &ldquo;Friendly&rdquo;</li>
+            <li>If $p = 0.5$, the bot is called &ldquo;Random&rdquo;</li>
+          </ul>
+        </li>
+      </ul>
+      <p><a id="footnotes"></a><br />
+        <a href="#footnote1">1</a>: Robert Axelrod and William D. Hamilton, <em>Science</em>. New Series, Vol. 211, No. 4489 (Mar. 27, 1981), pp. 1390-1396<br />
+        <a href="#footnote1">2</a>: <a href="http://www.r-bloggers.com/to-cooperate-of-defect-besides-of-coding-prisoners-dilemma-a-game-theory-example-in-r/">http://www.r-bloggers.com/to-cooperate-of-defect-besides-of-coding-prisoners-dilemma-a-game-theory-example-in-r/</a><br />
+        <a href="#footnote1">3</a>: <a href="http://axelrod.readthedocs.org/en/latest/">http://axelrod.readthedocs.org/en/latest/</a>
+      </p>
       <footer class="site-footer">
       </footer>
     </section>

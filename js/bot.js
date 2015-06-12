@@ -1,4 +1,5 @@
 id = 00;
+
 var Bot = function () {
 	this.scores = [];
 	this.history = [];
@@ -39,7 +40,8 @@ Bot.prototype.accumulate = function () {
 function DefectorBot() {
 	Bot.call(this);
 	this.strategy = function(opponent) { return 'D'; }
-	this.name = "DefectorBot" + " (id #" + id + ")";
+	this.nameid = "DefectorBot" + " (id #" + id + ")";
+	this.name = "DefectorBot";
 };
 
 DefectorBot.prototype = Object.create(Bot.prototype);
@@ -49,7 +51,8 @@ DefectorBot.prototype.constructor = DefectorBot;
 function CooperatorBot() {
 	Bot.call(this);
 	this.strategy = function(opponent) { return 'C'; }
-	this.name = "CooperatorBot" + " (id #" + id + ")";
+	this.nameid = "CooperatorBot" + " (id #" + id + ")";
+	this.name = "CooperatorBot";
 };
 
 CooperatorBot.prototype = Object.create(Bot.prototype);
@@ -66,6 +69,7 @@ function TitForTatBot() {
 			return opponent.history[moves-1];
 	}
 	this.name = "TitForTatBot" + " (id #" + id + ")";
+	this.nameid = "TitForTatBot";
 };
 
 TitForTatBot.prototype = Object.create(Bot.prototype);
@@ -82,13 +86,16 @@ function VariableBot(coop_percentage) {
 			return 'D';
 	};
 	if (coop_percentage < 0.5) {
-		this.name = "GreedyBot (" + coop_percentage + ")" + " (id #" + id + ")";
+		this.nameid = "GreedyBot (" + coop_percentage + ")" + " (id #" + id + ")";
+		this.name = "GreedyBot (" + coop_percentage + ")";
 	}
 	else if (coop_percentage === 0.5) {
-		this.name = "RandomBot" + " (id #" + id + ")";
+		this.nameid = "RandomBot" + " (id #" + id + ")";
+		this.name = "RandomBot";
 	}
 	else {
-		this.name = "FriendlyBot(" + coop_percentage + ")" + " (id #" + id + ")";
+		this.nameid = "FriendlyBot(" + coop_percentage + ")" + " (id #" + id + ")";
+		this.name = "FriendlyBot(" + coop_percentage + ")";
 	}
 };
 
@@ -111,7 +118,8 @@ function VindictiveBot() {
 		else
 			return 'C';
 	}
-	this.name = "VindictiveBot" + " (id #" + id + ")";
+	this.nameid = "VindictiveBot" + " (id #" + id + ")";
+	this.name = "VindictiveBot";
 	this.reset = function () {
 		this.history = [];
 		this.scores = [];
@@ -139,7 +147,8 @@ function PavlovBot() {
 				return this.history[this.moves-1] === 'C' ? 'D' : 'C';
 		}
 	}
-	this.name = "PavlovBot" + " (id #" + id + ")";
+	this.nameid = "PavlovBot" + " (id #" + id + ")";
+	this.name = "PavlovBot";
 };
 
 PavlovBot.prototype = Object.create(Bot.prototype);
