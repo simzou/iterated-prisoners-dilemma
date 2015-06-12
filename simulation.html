@@ -55,7 +55,9 @@
         header {
             margin-bottom: 50px;
         }
-
+        a.button {
+            font-size: .8em;
+        }
         </style>
     </head>
     <body>
@@ -101,28 +103,22 @@
                         </div>
                     </div>
                     <div class="large-2 columns">
-                        <a class="button failure" id="remove-button">Remove Last Added</a>
+                        <a class="button alert" id="remove-button">Remove Last Added</a>
                     </div>   
                     <div class="large-2 columns">
-                        <div class="row">
-                            <div class="large-12 columns">
-                                <a class="button info" id="run-button">Run</a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="large-12 columns">
-                                <a class="button secondary" id="clear-button">Clear</a>
-                            </div>
-                        </div>
-                    </div>                                 
-
+                        <a class="button info" id="run-button">Run</a>
+                        <a class="button secondary" id="clear-button">Clear</a>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="large-12 columns">
                         <p id="players"></p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="large-10 columns" id="chart-div">
+                    <div class="large-10 columns">
+                        <div id="chart-div" style="margin:0">
+                        </div>
 <!--                         <h3 id="chart-title">Average Scores per Bot</h3>
  -->                        
 <!--                         <canvas id="barchart"></canvas>
