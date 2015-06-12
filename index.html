@@ -18,6 +18,7 @@
 
 
 
+
     <script>
       MathJax.Hub.Config({
         config: ["MMLorHTML.js"],
@@ -42,6 +43,7 @@
         },
         showProcessingMessages: false
       });
+      hljs.initHighlightingOnLoad();
     </script>
     <style>
         #myChart {
@@ -122,13 +124,13 @@
       <p>Similar iterated prisoner&rsquo;s dilemma simulations have been demonstrated in R <a name="footnote2"></a><a href="#footnotes"><sup>2</sup></a> and Python <a name="footnote3"></a><a href="#footnotes"><sup>3</sup></a>. Here, we attempt to use JavaScript to program the strategies so that the simulations can run in any web browser. </p>
       <p>Using object oriented programming, a Bot class is defined from which other bots with different strategies will be derived. Each bot keeps track of the history of its own moves, as well as a the score for each round that it plays against a single opponent. Each bot also has access to its opponent&rsquo;s history of moves. Moves are represented by the characters &ldquo;C&rdquo; for cooperate and &ldquo;D&rdquo; for defect. </p>
       <p>Here is the basic prototype for a generic Bot:</p>
-      <pre><code>var Bot = function () {
+      <pre><code class="javascript">var Bot = function () {
           this.scores = [];
           this.history = [];
       };
       </code></pre>
       <p>And here is an example of a derived bot which uses the Tit-for-Tat bot (the winning strategy described previously):</p>
-      <pre><code>function TitForTatBot() {
+      <pre><code class="javascript">function TitForTatBot() {
           Bot.call(this);
           this.strategy = function(opponent) { 
               var moves = opponent.history.length;
