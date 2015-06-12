@@ -125,24 +125,22 @@
       <p>Using object oriented programming, a Bot class is defined from which other bots with different strategies will be derived. Each bot keeps track of the history of its own moves, as well as a the score for each round that it plays against a single opponent. Each bot also has access to its opponent&rsquo;s history of moves. Moves are represented by the characters &ldquo;C&rdquo; for cooperate and &ldquo;D&rdquo; for defect. </p>
       <p>Here is the basic prototype for a generic Bot:</p>
       <pre><code class="javascript">var Bot = function () {
-          this.scores = [];
-          this.history = [];
-      };
-      </code></pre>
+    this.scores = [];
+    this.history = [];
+};</code></pre>
       <p>And here is an example of a derived bot which uses the Tit-for-Tat bot (the winning strategy described previously):</p>
       <pre><code class="javascript">function TitForTatBot() {
-          Bot.call(this);
-          this.strategy = function(opponent) { 
-              var moves = opponent.history.length;
-              // if first move, cooperate
-              if (moves === 0)
-                  return 'C'; 
-              else 
-                  // mimic opponent's last move
-                  return opponent.history[moves-1];
-          }
-      };
-      </code></pre>
+    Bot.call(this);
+    this.strategy = function(opponent) { 
+        var moves = opponent.history.length;
+        // if first move, cooperate
+        if (moves === 0)
+            return 'C'; 
+        else 
+            // mimic opponent's last move
+            return opponent.history[moves-1];
+    }
+};</code></pre>
       <h4 id="strategies"><a name="user-content-strategies" href="#strategies" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Strategies</h4>
       <p>For the initial tournament, we implemented the following strategies:</p>
       <ul>
